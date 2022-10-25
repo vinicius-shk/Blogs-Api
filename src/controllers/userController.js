@@ -24,7 +24,21 @@ const createUser = async (req, res) => {
   res.status(201).json({ token: message });
 };
 
+const getAll = async (_req, res) => {
+  const { type, message } = await userService.getAll();
+
+  if (type) return res.status(type).json({ message });
+
+  res.status(200).json(message);
+};
+
+// const getByUserId = async (req, res) => {
+//   const { type, message } = await userService.getByUserId(req.params.id);
+// };
+
 module.exports = {
   login,
   createUser,
+  getAll,
+  // getByUserId,
 };

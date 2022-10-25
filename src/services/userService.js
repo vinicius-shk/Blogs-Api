@@ -15,7 +15,7 @@ const login = async ({ email, password }) => {
       algorithm: 'HS256',
     };
   
-    const token = jwt.sign({ email, password }, process.env.JWT_SECRET, jwtConfig);
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, jwtConfig);
   
     return { type: null, message: token };
   } catch (error) {
@@ -29,7 +29,6 @@ const createUser = async (body) => {
       where: { email: body.email },
       defaults: body,
     });
-  console.log(created);
     if (!created) return { type: 409, message: 'User already registered' };
     const jwtConfig = {
       expiresIn: '1d',
@@ -44,7 +43,17 @@ const createUser = async (body) => {
   }
 };
 
+const getAll = async () => {
+  try {
+    const message = await User.findAll({ attributes: { exclude: ['password'] } });
+    return { type: null, message };
+  } catch (error) {
+    return { type: 500, message: 'Something went wrong' };
+  }
+};
+
 module.exports = {
   login,
   createUser,
+  getAll,
 };
