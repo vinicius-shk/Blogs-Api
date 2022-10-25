@@ -8,4 +8,6 @@ app.use(express.json());
 
 app.post('/login', userController.login);
 
+app.post('/user', userController.createUser);
+
 module.exports = app;

@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
-
 const { userService } = require('../services');
-const loginSchema = require('../validations/users/loginSchema');
+const { loginSchema, createUserSchema } = require('../validations/users');
 
 const login = async (req, res) => {
   const { error } = loginSchema.validate(req.body);
@@ -10,15 +8,23 @@ const login = async (req, res) => {
   const { type, message } = await userService.login(req.body);
 
   if (type) return res.status(type).json({ message });
-  const jwtConfig = {
-    expiresIn: '1d',
-    algorithm: 'HS256',
-  };
 
-  const token = jwt.sign({ ...req.body, admin: true }, process.env.JWT_SECRET, jwtConfig);
-  res.status(200).json({ token });
+  res.status(200).json({ token: message });
+};
+
+const createUser = async (req, res) => {
+  const { error } = createUserSchema.validate(req.body);
+
+  if (error) return res.status(400).json({ message: error.details[0].message });
+
+  const { type, message } = await userService.createUser(req.body);
+
+  if (type) return res.status(type).json({ message });
+
+  res.status(201).json({ token: message });
 };
 
 module.exports = {
   login,
+  createUser,
 };
