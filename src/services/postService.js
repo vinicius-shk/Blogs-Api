@@ -26,7 +26,8 @@ const createBlogPost = async ({ title, content, categoryIds, userId }) => {
       const { published, updated, id } = response;
 
       const promises = categoryIds.map(async (idCat) => {
-        const data = await PostCategory.create({ postId: id, categoryId: idCat }, { transaction: t });
+        const data = await PostCategory
+          .create({ postId: id, categoryId: idCat }, { transaction: t });
         return data;
       });
       await Promise.all(promises);
