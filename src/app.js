@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { userController } = require('./controllers');
+const { userController, categoryController } = require('./controllers');
 const jwtValidation = require('./middlewares/auth/jwtValidation');
 
 const app = express();
@@ -14,5 +14,7 @@ app.get('/user/:id', jwtValidation, userController.getById);
 app.post('/login', userController.login);
 
 app.post('/user', userController.createUser);
+
+app.post('/categories', jwtValidation, categoryController.createCategory);
 
 module.exports = app;
