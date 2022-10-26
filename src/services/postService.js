@@ -21,7 +21,23 @@ const getAll = async () => {
   }
 };
 
-const getCategoryById = async (id) => {
+const getById = async (id) => {
+  try {
+    const response = await BlogPost.findOne({
+      where: { id },
+      include: [
+        { model: User, as: 'user', attributes: { exclude: ['password'] } },
+        { model: Category, as: 'categories' },
+      ],
+    });
+    if (!response) return { type: 404, message: 'Post does not exist' };
+    return { type: null, message: response };
+  } catch (error) {
+    return { type: 500, message: 'Something went wrong' };
+  }
+};
+
+const checkCategoryById = async (id) => {
   try {
     const response = await Category.findByPk(id);
 
@@ -54,7 +70,8 @@ const createBlogPost = async ({ title, content, categoryIds, userId }) => {
 };
 
 module.exports = {
-  getCategoryById,
+  checkCategoryById,
   createBlogPost,
   getAll,
+  getById,
 };
