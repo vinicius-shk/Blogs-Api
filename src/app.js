@@ -11,6 +11,8 @@ app.get('/user', jwtValidation, userController.getAll);
 
 app.get('/user/:id', jwtValidation, userController.getById);
 
+app.get('/categories', jwtValidation, categoryController.getAll);
+
 app.post('/login', userController.login);
 
 app.post('/user', userController.createUser);
