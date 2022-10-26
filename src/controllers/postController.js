@@ -1,5 +1,5 @@
 const { postService } = require('../services');
-const { blogPostSchema } = require('../validations/blogPosts');
+const { blogPostSchema, updatePostSchema } = require('../validations/blogPosts');
 
 const createBlogPost = async (req, res) => {
   const { user } = req;
@@ -40,8 +40,27 @@ const getById = async (req, res) => {
   res.status(200).json(message);
 };
 
+const updatePost = async (req, res) => {
+  const { user } = req;
+  const { id } = req.params;
+  const { error } = updatePostSchema.validate(req.body);
+
+  if (error) return res.status(400).json({ message: error.details[0].message });
+
+  const post = await postService.getById(id);
+  if (post.type) return res.status(post.type).json({ message: post.message });
+  if (Number(post.message.userId) !== Number(user.id)) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
+
+  const { type, message } = await postService.updatePost(id, req.body);
+  if (type) return res.status(type).json({ message });
+  res.status(200).json(message);
+};
+
 module.exports = {
   createBlogPost,
   getAll,
   getById,
+  updatePost,
 };

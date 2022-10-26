@@ -17,6 +17,8 @@ app.get('/post', jwtValidation, postController.getAll);
 
 app.get('/post/:id', jwtValidation, postController.getById);
 
+app.put('/post/:id', jwtValidation, postController.updatePost);
+
 app.post('/login', userController.login);
 
 app.post('/user', userController.createUser);

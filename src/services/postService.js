@@ -69,9 +69,23 @@ const createBlogPost = async ({ title, content, categoryIds, userId }) => {
   }
 };
 
+const updatePost = async (id, body) => {
+  try {
+    await BlogPost.update({ ...body }, {
+      where: { id },
+    });
+
+    const reponse = await getById(id);
+    return reponse;
+  } catch (e) {
+    return { type: 500, message: 'Somenthing went wrong' };
+  }
+};
+
 module.exports = {
   checkCategoryById,
   createBlogPost,
   getAll,
   getById,
+  updatePost,
 };
