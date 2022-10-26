@@ -1,11 +1,25 @@
 const Sequelize = require('sequelize');
 
-const { Category, PostCategory, BlogPost } = require('../models');
+const { Category, PostCategory, BlogPost, User } = require('../models');
 const config = require('../config/config');
 
 const env = process.env.NODE_ENV || 'development';
 
 const sequelize = new Sequelize(config[env]);
+
+const getAll = async () => {
+  try {
+    const response = await BlogPost.findAll({
+      include: [
+        { model: User, as: 'user', attributes: { exclude: ['password'] } },
+        { model: Category, as: 'categories' },
+      ],
+    });
+    return { type: null, message: response };
+  } catch (error) {
+    return { type: 500, message: 'Something went wrong' };
+  }
+};
 
 const getCategoryById = async (id) => {
   try {
@@ -35,7 +49,6 @@ const createBlogPost = async ({ title, content, categoryIds, userId }) => {
     });
     return result;
   } catch (e) {
-    console.log(e.message);
     return { type: 500, message: 'Something went wrong' };
   }
 };
@@ -43,4 +56,5 @@ const createBlogPost = async ({ title, content, categoryIds, userId }) => {
 module.exports = {
   getCategoryById,
   createBlogPost,
+  getAll,
 };
