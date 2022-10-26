@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { userController, categoryController } = require('./controllers');
+const { userController, categoryController, postController } = require('./controllers');
 const jwtValidation = require('./middlewares/auth/jwtValidation');
 
 const app = express();
@@ -16,6 +16,8 @@ app.get('/categories', jwtValidation, categoryController.getAll);
 app.post('/login', userController.login);
 
 app.post('/user', userController.createUser);
+
+app.post('/post', jwtValidation, postController.createBlogPost);
 
 app.post('/categories', jwtValidation, categoryController.createCategory);
 

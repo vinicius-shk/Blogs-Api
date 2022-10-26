@@ -17,7 +17,7 @@ const login = async ({ email, password }) => {
       algorithm: 'HS256',
     };
   
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, jwtConfig);
+    const token = jwt.sign({ email, id: response.id }, process.env.JWT_SECRET, jwtConfig);
   
     return { type: null, message: token };
   } catch (error) {
@@ -27,7 +27,7 @@ const login = async ({ email, password }) => {
 
 const createUser = async (body) => {
   try {
-    const [, created] = await User.findOrCreate({
+    const [user, created] = await User.findOrCreate({
       where: { email: body.email },
       defaults: body,
     });
@@ -37,7 +37,8 @@ const createUser = async (body) => {
       algorithm: 'HS256',
     };
     const { email, displayName, image } = body;
-    const token = jwt.sign({ email, displayName, image }, process.env.JWT_SECRET, jwtConfig);
+    const token = jwt
+      .sign({ email, displayName, image, id: user.id }, process.env.JWT_SECRET, jwtConfig);
   
     if (created) return { type: null, message: token };  
   } catch (error) {
