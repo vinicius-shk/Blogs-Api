@@ -82,10 +82,20 @@ const updatePost = async (id, body) => {
   }
 };
 
+const deletePost = async (id) => {
+  try {
+    const response = await BlogPost.destroy({ where: { id } });
+    return { type: null, message: response };
+  } catch (e) {
+    return { type: 500, message: 'Somenthing went wrong' };
+  }
+};
+
 module.exports = {
   checkCategoryById,
   createBlogPost,
   getAll,
   getById,
   updatePost,
+  deletePost,
 };

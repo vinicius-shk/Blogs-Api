@@ -1,5 +1,3 @@
-// comment para subir o 15 de novo
-
 const express = require('express');
 
 const { userController, categoryController, postController } = require('./controllers');
@@ -28,5 +26,7 @@ app.post('/user', userController.createUser);
 app.post('/post', jwtValidation, postController.createBlogPost);
 
 app.post('/categories', jwtValidation, categoryController.createCategory);
+
+app.delete('/post/:id', jwtValidation, postController.deletePost);
 
 module.exports = app;
