@@ -7,6 +7,10 @@ const env = process.env.NODE_ENV || 'development';
 
 const sequelize = new Sequelize(config[env]);
 
+const { Op } = Sequelize;
+
+const errorMessage = 'Something went wrong';
+
 const getAll = async () => {
   try {
     const response = await BlogPost.findAll({
@@ -17,7 +21,7 @@ const getAll = async () => {
     });
     return { type: null, message: response };
   } catch (error) {
-    return { type: 500, message: 'Something went wrong' };
+    return { type: 500, message: errorMessage };
   }
 };
 
@@ -33,7 +37,25 @@ const getById = async (id) => {
     if (!response) return { type: 404, message: 'Post does not exist' };
     return { type: null, message: response };
   } catch (error) {
-    return { type: 500, message: 'Something went wrong' };
+    return { type: 500, message: errorMessage };
+  }
+};
+
+const getByQuery = async (q) => {
+  try {
+    const response = await BlogPost.findAll({
+      where: {
+        [Op.or]: [{ title: { [Op.like]: `%${q}%` } }, { content: { [Op.like]: `%${q}%` } }],
+      },
+      include: [
+        { model: User, as: 'user', attributes: { exclude: ['password'] } },
+        { model: Category, as: 'categories', through: { attributes: [] } },
+      ],
+    });
+    return { type: null, message: response };
+  } catch (e) {
+    console.log(e.message);
+    return { type: 500, message: errorMessage };
   }
 };
 
@@ -45,7 +67,7 @@ const checkCategoryById = async (id) => {
 
     return { type: null, message: response };
   } catch (error) {
-    return { type: 500, message: 'Something went wrong' };
+    return { type: 500, message: errorMessage };
   }
 };
 
@@ -65,7 +87,7 @@ const createBlogPost = async ({ title, content, categoryIds, userId }) => {
     });
     return result;
   } catch (e) {
-    return { type: 500, message: 'Something went wrong' };
+    return { type: 500, message: errorMessage };
   }
 };
 
@@ -78,7 +100,7 @@ const updatePost = async (id, body) => {
     const reponse = await getById(id);
     return reponse;
   } catch (e) {
-    return { type: 500, message: 'Somenthing went wrong' };
+    return { type: 500, message: errorMessage };
   }
 };
 
@@ -87,7 +109,7 @@ const deletePost = async (id) => {
     const response = await BlogPost.destroy({ where: { id } });
     return { type: null, message: response };
   } catch (e) {
-    return { type: 500, message: 'Somenthing went wrong' };
+    return { type: 500, message: errorMessage };
   }
 };
 
@@ -98,4 +120,5 @@ module.exports = {
   getById,
   updatePost,
   deletePost,
+  getByQuery,
 };

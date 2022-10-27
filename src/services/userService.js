@@ -13,7 +13,7 @@ const login = async ({ email, password }) => {
     if (!response) return { type: 400, message: 'Invalid fields' };
   
     const jwtConfig = {
-      expiresIn: '1d',
+      expiresIn: '7d',
       algorithm: 'HS256',
     };
   
@@ -33,7 +33,7 @@ const createUser = async (body) => {
     });
     if (!created) return { type: 409, message: 'User already registered' };
     const jwtConfig = {
-      expiresIn: '1d',
+      expiresIn: '7d',
       algorithm: 'HS256',
     };
     const { email, displayName, image } = body;

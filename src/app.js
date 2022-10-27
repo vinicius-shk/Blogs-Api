@@ -15,6 +15,8 @@ app.get('/categories', jwtValidation, categoryController.getAll);
 
 app.get('/post', jwtValidation, postController.getAll);
 
+app.get('/post/search', jwtValidation, postController.getByQuery);
+
 app.get('/post/:id', jwtValidation, postController.getById);
 
 app.put('/post/:id', jwtValidation, postController.updatePost);
