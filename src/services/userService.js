@@ -65,9 +65,19 @@ const getById = async (id) => {
   }
 };
 
+const deleteUser = async (id) => {
+  try {
+    const response = await User.destroy({ where: { id } });
+    return { type: null, message: response };
+  } catch (e) {
+    return { type: 500, message: 'Somenthing went wrong' };
+  }
+};
+
 module.exports = {
   login,
   createUser,
   getAll,
   getById,
+  deleteUser,
 };

@@ -29,4 +29,6 @@ app.post('/categories', jwtValidation, categoryController.createCategory);
 
 app.delete('/post/:id', jwtValidation, postController.deletePost);
 
+app.delete('/user/me', jwtValidation, userController.deleteUser);
+
 module.exports = app;
